@@ -1,0 +1,88 @@
+eval "$(/opt/homebrew/bin/brew shellenv)"
+
+export LC_ALL=en_US.UTF-8
+export GOPATH=$HOME/dev/.go
+export GOGITHUBPATH=$GOPATH/src/github.com
+export GOPRIVATE=github.com/egocentric-systems/*
+export PATH=$PATH:`go env GOROOT`/bin:$GOPATH/bin:~/dev/.tools/google-cloud-sdk/bin
+
+export CLICOLOR=1
+export LSCOLORS=dxxxxxxxbxxxxxbxbxdxdx
+export LS_COLORS=di=33:ex=31
+export LESSHISTFILE=-
+
+alias ls='ls -F'
+alias la='ls -a'
+
+PROMPT='%B%F{green}%30<..<%~%f %#%b '
+setopt NO_CORRECT
+
+# history
+HISTSIZE=5000
+HISTFILE=$HOME/.cache/zsh/history
+SAVEHIST=$HISTSIZE
+setopt HIST_IGNORE_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+
+# completion
+autoload -U compinit
+compinit
+
+setopt NO_BEEP
+setopt NO_AUTO_MENU
+setopt NO_AUTO_REMOVE_SLASH
+setopt RM_STAR_SILENT
+
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' cache-path ~/.tmp/zsh/cache
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' verbose false
+
+# git
+__git_files() { _wanted files expl 'local files' _files }
+
+# tmux
+bindkey -s ^p "tmux-session\n"
+
+# vim
+alias vim='nvim'
+alias vi='nvim'
+
+# nodenv
+alias enable-nodenv='eval "$(nodenv init -)"'
+
+# kubernetes
+export USE_GKE_GCLOUD_AUTH_PLUGIN=True
+alias k='kubectl'
+kx() { if [ -n "$1" ]; then kubectl config use-context $1; else kubectl config current-context; fi; }
+
+
+
+# CTRL-R - Paste the selected command from history into the command line
+function fzf-history() {
+	local selected num
+	setopt localoptions noglobsubst noposixbuiltins pipefail no_aliases 2> /dev/null
+	selected=( $(fc -rl 1 | awk '{ cmd=$0; sub(/^[ \t]*[0-9]+\**[ \t]+/, "", cmd); if (!seen[cmd]++) print $0 }' | FZF_DEFAULT_OPTS="--height ${FZF_TMUX_HEIGHT:-40%} $FZF_DEFAULT_OPTS -n2..,.. --scheme=history --bind=ctrl-r:toggle-sort,ctrl-z:ignore $FZF_CTRL_R_OPTS --query=${(qqq)LBUFFER} +m" fzf) )
+	local ret=$?
+	if [ -n "$selected" ]; then
+		num=$selected[1]
+		if [ -n "$num" ]; then
+			zle vi-fetch-history -n $num
+		fi
+	fi
+	zle reset-prompt
+	return $ret
+}
+
+zle -N fzf-history
+bindkey -M emacs '^R' fzf-history
+bindkey -M vicmd '^R' fzf-history
+bindkey -M viins '^R' fzf-history

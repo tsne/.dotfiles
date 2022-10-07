@@ -1,0 +1,30 @@
+#!/usr/bin/env sh
+
+if [[ $# -eq 1 ]]; then
+    path=$1
+else
+	path=$(fd -E "node_modules" -td --min-depth=1 --max-depth=2 . "$HOME/dev" | fzf --height=40%)
+fi
+
+if [[ -z $path ]]; then
+    exit 0
+fi
+
+session_name=$(basename "$path" | tr . _)
+tmux_running=$(pgrep tmux)
+
+if [[ -z $TMUX ]] && [[ -z $tmux_running ]]; then
+    tmux new-session -s $session_name -c $path
+    exit 0
+fi
+
+if ! tmux has-session -t=$session_name 2> /dev/null; then
+	tmux new-session -d -s $session_name -c $path
+fi
+
+
+if [[ -z $TMUX ]]; then
+	tmux attach-session -t $session_name
+else
+	tmux switch-client -t $session_name
+fi

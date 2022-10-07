@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+
+
+dotfiles=$HOME/.dotfiles
+
+
+function install_brew() {
+	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+}
+
+function install_zsh() {
+	ln -s $dotfiles/zsh/zshrc $HOME/.zshrc
+	mkdir -p $HOME/.cache/zsh
+}
+
+function install_tmux() {
+	brew install tmux fzf fd
+	ln -s $dotfiles/tmux/tmux.conf $HOME/.tmux.conf
+	sudo ln -s $dotfiles/tmux/tmux-session /usr/local/bin/tmux-session
+}
+
+function install_git() {
+	email="$(grep -oE '[^[:space:]]+$' ~/.ssh/id_ed25519.pub)"
+
+	brew install git
+	ln -s $dotfiles/git/gitconfig $HOME/.gitconfig
+	echo "$email $(cat ~/.ssh/id_ed25519.pub)" > $dotfiles/git/allowed_signers
+	git config --global user.email "$email"
+	git config --global user.signingKey "$(cat ~/.ssh/id_ed25519.pub)"
+	git config --global gpg.ssh.allowedSignersFile $dotfiles/git/allowed_signers
+}
+
+function install_nvim() {
+	brew install neovim
+	ln -s $dotfiles/nvim $HOME/.config/nvim
+	git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim
+}
+
+function install_dev() {
+	brew install go zig
+	mkdir -p $HOME/dev/.go
+}
+
+
+
+if [[ -z $@ ]]; then
+	tools="brew zsh tmux git nvim dev"
+else
+	tools="$@"
+fi
+
+for tool in $tools; do
+	case $tool in
+		brew) install_brew;;
+		zsh)  install_zsh;;
+		tmux) install_tmux;;
+		git)  install_git;;
+		nvim) install_nvim;;
+		dev)  install_dev;;
+		*)    echo "error: unknown parameter $tool" >> /dev/stderr; exit 1;;
+	esac
+done

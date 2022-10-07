@@ -1,0 +1,45 @@
+[user]
+	name = tsne
+	email = tsne@example.com
+	signingKey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILjve6yZ1QpF2WCG8XKa0LB7J7xOILO3eYg4mGtRnkcV tsne@example.com
+
+[color]
+	ui = true
+
+[color "status"]
+	added = green
+	changed = yellow
+	untracked = red
+
+[color "branch"]
+	current = yellow reverse
+	local = yellow
+	remote = green
+
+[color "diff"]
+	meta = yellow
+	frag = magenta bold
+	old = red
+	new = green
+	whitespace = red reverse
+
+[pull]
+	rebase = true
+
+[push]
+	default = simple
+
+[url "git@github.com:"]
+	insteadOf = https://github.com/
+
+[gpg]
+	format = ssh
+
+[gpg "ssh"]
+	allowedSignersFile = /Users/tsne/.dotfiles/git/allowed_signers
+
+[commit]
+	gpgsign = true
+
+[tag]
+	gpgsign = true
