@@ -1,12 +1,3 @@
-require("nightfox").setup({
-	options = {
-		dim_inactive = true
-	},
-	groups = {
-		all = {
-			StatusLine = {fg = "bg0", bg = "fg2"}
-		}
-	},
-})
+vim.opt.background = "light"
+vim.cmd.colorscheme("tsne")
 
-vim.cmd.colorscheme("nightfox")
