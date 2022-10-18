@@ -7,14 +7,14 @@ export GOPRIVATE=github.com/egocentric-systems/*
 export PATH=$PATH:`go env GOROOT`/bin:$GOPATH/bin:~/dev/.tools/google-cloud-sdk/bin
 
 export CLICOLOR=1
-export LSCOLORS=dxxxxxxxbxxxxxbxbxdxdx
-export LS_COLORS=di=33:ex=31
+export LSCOLORS=dxgxxxxxbxxxxxbxbxdxdx
+export LS_COLORS=di=33:ln=36:so=0:pi=0:ex=31:bd=0:cd=0:su=31:sg=31:tw=33:ow=33
 export LESSHISTFILE=-
 
 alias ls='ls -F'
 alias la='ls -a'
 
-PROMPT='%B%F{green}%30<..<%~%f %#%b '
+PROMPT='%B%F{green}%35<..<%~%f %#%b '
 setopt NO_CORRECT
 
 # history
@@ -29,6 +29,8 @@ setopt SHARE_HISTORY
 autoload -U history-search-end
 zle -N history-beginning-search-backward-end history-search-end
 zle -N history-beginning-search-forward-end history-search-end
+bindkey '\e[A' history-beginning-search-backward-end
+bindkey '\e[B' history-beginning-search-forward-end
 
 # completion
 autoload -U compinit
@@ -40,7 +42,7 @@ setopt NO_AUTO_REMOVE_SLASH
 setopt RM_STAR_SILENT
 
 zstyle ':completion:*' use-compctl false
-zstyle ':completion:*' cache-path ~/.tmp/zsh/cache
+zstyle ':completion:*' cache-path ~/.cache/zsh/completion
 zstyle ':completion::complete:*' use-cache on
 zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' special-dirs true
@@ -50,7 +52,8 @@ zstyle ':completion:*' verbose false
 __git_files() { _wanted files expl 'local files' _files }
 
 # tmux
-bindkey -s ^p "tmux-session\n"
+bindkey -s '^P' 'tmux-cd\n'
+bindkey -s '^L' 'tmux-goto\n'
 
 # vim
 alias vim='nvim'
