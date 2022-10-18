@@ -3,7 +3,7 @@
 if [[ $# -eq 1 ]]; then
     path=$1
 else
-	path=$(fd -E "node_modules" -td --min-depth=1 --max-depth=2 . "$HOME/dev" | fzf --height=40%)
+	path=$(fd -E "node_modules" -td --min-depth=1 --max-depth=2 . "$HOME/dev" | fzf --height=40% --header=Directories --header-first)
 fi
 
 if [[ -z $path ]]; then

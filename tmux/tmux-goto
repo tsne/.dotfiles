@@ -1,0 +1,23 @@
+#!/usr/bin/env sh
+
+
+if [[ $# -eq 1 ]]; then
+	session_name=$1
+else
+	session_list=$(tmux list-sessions -F "#{session_name}   (#{session_windows} window#{?#{e|>:#{session_windows},1},s,})")
+	if [[ $? -ne 0 ]]; then
+		exit $?
+	fi
+	session_name=$(echo "$session_list" | fzf --height=40% --header=Sessions --header-first | grep -oE -m1 "^[^[:space:]]+")
+
+fi
+
+if [[ -z $session_name ]]; then
+	exit 0
+fi
+
+if [[ -z $TMUX ]]; then
+	tmux attach-session -t $session_name
+else
+	tmux switch-client -t $session_name
+fi
