@@ -16,7 +16,8 @@ function install_zsh() {
 function install_tmux() {
 	brew install tmux fzf fd
 	ln -s $dotfiles/tmux/tmux.conf $HOME/.tmux.conf
-	sudo ln -s $dotfiles/tmux/tmux-session /usr/local/bin/tmux-session
+	sudo ln -s $dotfiles/tmux/tmux-cd /usr/local/bin/tmux-cd
+	sudo ln -s $dotfiles/tmux/tmux-goto /usr/local/bin/tmux-goto
 }
 
 function install_git() {
@@ -36,15 +37,25 @@ function install_nvim() {
 	git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim
 }
 
-function install_dev() {
-	brew install go zig
+function install_go() {
+	brew install go
 	mkdir -p $HOME/dev/.go
+}
+
+function install_zig() {
+	brew install zig
+
+	mkdir -p $dotfiles/zig/zls $dotfiles/zig/bin
+	curl -L https://github.com/zigtools/zls/releases/download/0.9.0/x86_64-macos.tar.xz | tar -xJ --strip-components=1 -C $dotfiles/zig/zls
+	chmod +x $dotfiles/zig/zls/zls
+	mv $dotfiles/zig/zls/zls $dotfiles/zig/bin/zls
+	sudo ln -s $dotfiles/zig/bin/zls /usr/local/bin/zls
 }
 
 
 
 if [[ -z $@ ]]; then
-	tools="brew zsh tmux git nvim dev"
+	tools="brew zsh tmux git nvim go zig"
 else
 	tools="$@"
 fi
@@ -56,7 +67,8 @@ for tool in $tools; do
 		tmux) install_tmux;;
 		git)  install_git;;
 		nvim) install_nvim;;
-		dev)  install_dev;;
+		go)  install_go;;
+		zig)  install_zig;;
 		*)    echo "error: unknown parameter $tool" >> /dev/stderr; exit 1;;
 	esac
 done
