@@ -14,7 +14,7 @@ export LESSHISTFILE=-
 alias ls='ls -F'
 alias la='ls -a'
 
-PROMPT='%B%F{green}%35<..<%~%f %#%b '
+PROMPT='%B%F{white}%K{green}%35<..<%~%k%f %#%b '
 setopt NO_CORRECT
 
 # history

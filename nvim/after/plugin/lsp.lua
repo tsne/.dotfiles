@@ -23,8 +23,6 @@ local function lsconf(config)
 			remap("n", "<leader>dp", vim.diagnostic.goto_prev, bufnr)
 			remap("n", "<leader>dn", vim.diagnostic.goto_next, bufnr)
 			remap("i", "<C-h>", vim.lsp.buf.signature_help, bufnr)
-			--[[
-			]]--
 		end,
 	})
 end
@@ -101,7 +99,7 @@ cmp.setup({
 	},
 	matching = {
 		disallow_fuzzy_matching = true,
-		disallow_partial_matching = true,
+		disallow_partial_matching = false,
 	},
 	mapping = cmp.mapping.preset.insert({
 		["<CR>"] = cmp.mapping.confirm({ select = true }),
