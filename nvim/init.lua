@@ -27,7 +27,10 @@ vim.g.netrw_banner = 0
 require("packer").startup(function(use)
 	use("wbthomason/packer.nvim")
 	use("neovim/nvim-lspconfig")
-	use("nvim-treesitter/nvim-treesitter")
+	use({
+		"nvim-treesitter/nvim-treesitter",
+		run = require("nvim-treesitter.install").update({ with_sync = true }),
+	})
 	use("nvim-treesitter/nvim-treesitter-context")
 	use("hrsh7th/nvim-cmp")
 	use("hrsh7th/cmp-nvim-lsp")
@@ -36,6 +39,6 @@ require("packer").startup(function(use)
 	use({
 		"nvim-telescope/telescope.nvim",
 		branch = "0.1.x",
-		requires = { {"nvim-lua/plenary.nvim"} }
+		requires = { {"nvim-lua/plenary.nvim"} },
 	})
 end)
