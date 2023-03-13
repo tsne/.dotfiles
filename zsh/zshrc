@@ -13,6 +13,7 @@ export LESSHISTFILE=-
 
 alias ls='ls -F'
 alias la='ls -a'
+alias ll='ls -l'
 
 PROMPT='%B%F{white}%K{green}%35<..<%~%k%f %#%b '
 setopt NO_CORRECT
