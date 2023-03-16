@@ -4,10 +4,10 @@ end
 
 
 -- treesitter
-relink("TSNamespace", "Identifier")
-relink("TSTypeBuiltin", "Keyword")
-relink("TSConstBuiltin", "Keyword")
-relink("TSVariableBuiltin", "Keyword")
+relink("@constant.builtin", "Keyword")
+relink("@function.builtin", "Keyword")
+relink("@type.qualifier", "Keyword")
+relink("@attribute", "Keyword")
 
 -- cmp
 relink("CmpItemAbbrMatch", "PmenuHighlight")

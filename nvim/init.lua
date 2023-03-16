@@ -29,7 +29,7 @@ require("packer").startup(function(use)
 	use("neovim/nvim-lspconfig")
 	use({
 		"nvim-treesitter/nvim-treesitter",
-		run = require("nvim-treesitter.install").update({ with_sync = true }),
+		run = ":TSUpdate",
 	})
 	use("nvim-treesitter/nvim-treesitter-context")
 	use("hrsh7th/nvim-cmp")
