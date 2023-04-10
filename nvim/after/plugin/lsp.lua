@@ -133,10 +133,12 @@ autocmd("BufWritePre", {
 				end
 			end
 		end
-	end
+	end,
 })
 
 autocmd("BufWritePre", {
 	pattern = "*",
-	callback = vim.lsp.buf.formatting_sync
+	callback = function()
+		vim.lsp.buf.format({async = false})
+	end,
 })
