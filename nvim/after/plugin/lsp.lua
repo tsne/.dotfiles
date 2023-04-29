@@ -87,7 +87,6 @@ cmp.setup({
 	formatting = {
 		format = function(entry, vim_item)
 			local kind = cmpkinds[vim_item.kind]
-
 			vim_item.kind = kind or vim_item.kind
 			return vim_item
 		end

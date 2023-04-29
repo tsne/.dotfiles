@@ -53,14 +53,24 @@ function install_go() {
 }
 
 function install_zig() {
-	brew install zig --head
+	zigdir=$HOME/dev/.zig
 
-	git clone --recurse-submodules https://github.com/zigtools/zls $dotfiles/zig/zls
-	cd $dotfiles/zig/zls
-	zig build -Doptimize=ReleaseSafe
+	mkdir -p $zigdir/src
+	brew install cmake llvm zstd
+
+	git clone https://github.com/ziglang/zig.git $zigdir/src/zig
+	cd $zigdir/src/zig
+		mkdir build
+		cmake -S. -Bbuild -DZIG_STATIC_LLVM=ON -DCMAKE_PREFIX_PATH="$(brew --prefix llvm);$(brew --prefix zstd)"
+		make -Cbuild install
 	cd -
-	sudo rm -f /usr/local/bin/zls
-	sudo ln -s $dotfiles/zig/zls/zig-out/bin/zls /usr/local/bin/zls
+	cp -r $zigdir/src/zig/build/stage3/* $zigdir/
+
+	git clone https://github.com/zigtools/zls $zigdir/src/zls
+	cd $zigdir/src/zls
+		zig build -Doptimize=ReleaseSafe
+	cd -
+	cp $zigdir/src/zls/zig-out/bin/zls $zigdir/bin/
 }
 
 
