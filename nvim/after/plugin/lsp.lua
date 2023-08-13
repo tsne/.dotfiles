@@ -45,6 +45,8 @@ require("lspconfig").gopls.setup(lsconf({
 
 require("lspconfig").zls.setup(lsconf())
 
+require("lspconfig").svelte.setup(lsconf())
+
 
 -- nvim-cmp config
 local cmp = require("cmp")
