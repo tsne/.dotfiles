@@ -41,6 +41,8 @@ services:
       PAPERLESS_FILENAME_FORMAT: "{created_year}/{correspondent}/{created}_{title}"
       PAPERLESS_FILENAME_FORMAT_REMOVE_NONE: "True"
       PAPERLESS_CONSUMER_ENABLE_BARCODES: "True"
+      PAPERLESS_SECRET_KEY: "kmn:c93jfn9in#cij39nfc9o3m4i&ufndcmoxam,ldm,w.fcoijf093jmoidmwiomdowkdf09%im34oidm"
+      PAPERLESS_URL: "https://dokumente.lichter.haus"
       #PAPERLESS_ADMIN_USER: tsne
       #PAPERLESS_ADMIN_PASSWORD: admin
 
