@@ -12,7 +12,7 @@ export LSCOLORS=dxgxxxxxbxxxxxbxbxdxdx
 export LS_COLORS=di=33:ln=36:so=0:pi=0:ex=31:bd=0:cd=0:su=31:sg=31:tw=33:ow=33
 export LESSHISTFILE=-
 
-alias ls='ls -F'
+alias ls='ls -1F'
 alias la='ls -a'
 alias ll='ls -l'
 
