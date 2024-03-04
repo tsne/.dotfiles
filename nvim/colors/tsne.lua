@@ -139,7 +139,7 @@ hi("lCursor",        { link = "Cursor" })                                       
 hi("CursorIM",       { link = "Cursor" })                                                   -- like Cursor, but used when in IME mode |CursorIM|
 hi("CursorColumn",   { link = "CursorLine" })                                               -- Screen-column at the cursor, when 'cursorcolumn' is set.
 hi("CursorLine",     { bg = clr.back_aside })                                               -- Screen-line at the cursor, when 'cursorline' is set.  Low-priority if foreground (ctermfg OR guifg) is not set.
-hi("Directory",      { fg = clr.text_normal })                                              -- directory names (and other special names in listings)
+hi("Directory",      { fg = clr.text_normal, bold = true })                                 -- directory names (and other special names in listings)
 hi("DiffAdd",        { fg = clr.back_normal, bg = clr.diff_add })                           -- diff mode: Added line |diff.txt|
 hi("DiffChange",     { fg = clr.back_normal, bg = clr.diff_mod })                           -- diff mode: Changed line |diff.txt|
 hi("DiffDelete",     { fg = clr.back_normal, bg = clr.diff_del })                           -- diff mode: Deleted line |diff.txt|
