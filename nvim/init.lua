@@ -15,7 +15,7 @@ vim.opt.shadafile = vim.fn.expand("~/.cache/nvim/shada")
 vim.opt.statusline = "%<%f%( [%M%R]%)%=%5l:%-4c %3p%%"
 vim.opt.undofile = true
 vim.opt.undodir = vim.fn.expand("~/.cache/nvim/undo/")
-vim.opt.grepprg = "grep -rn $*"
+vim.opt.grepprg = "grep -rn"
 
 vim.g.mapleader = " "
 vim.g.netrw_home = vim.fn.expand('~/.cache/nvim/netrw')

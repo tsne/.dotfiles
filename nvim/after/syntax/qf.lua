@@ -1,0 +1,5 @@
+vim.cmd.syntax("clear qfFileName qfLineNr")
+vim.cmd.syntax("match  qfFileName      /^[^:]\\+:[0-9]*:[0-9]*:/he=e-1")
+vim.cmd.syntax("match  qfLineNr        /:[0-9]*:[0-9]*:/he=e-1 containedin=qfFileName")
+vim.cmd.syntax("region qfStatusSuccess start=/^# command finished/ end=/$/ oneline")
+vim.cmd.syntax("region qfStatusFailure start=/^# command exited/   end=/$/ oneline")
