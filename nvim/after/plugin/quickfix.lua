@@ -37,7 +37,7 @@ local function on_job_exit(id, code, event)
 			"SIGCHLD", "SIGCONT",   "SIGSTOP", "SIGTSTP",  "SIGTTIN", "SIGTTOU", "SIGURG",  "SIGXCPU",
 			"SIGXFSZ", "SIGVTALRM", "SIGPROF", "SIGWINCH", "SIGIO",   "SIGPWR",  "SIGSYS"
 		}
-		local sig = sigs[128 - code]
+		local sig = sigs[code - 128]
 		if sig then
 			last_line = "# command exited by " .. sig
 		else
@@ -56,13 +56,16 @@ local function on_job_exit(id, code, event)
 	job.started = nil
 end
 
-local function shell_exec(command, opts)
+local function shell_terminate()
 	if job.id > 0 then
 		vim.fn.jobstop(job.id)
 	end
+end
+
+local function shell_exec(command, opts)
+	shell_terminate()
 
 	local cmd = table.concat(command, " ")
-
 	job.last_line = ""
 	job.id = vim.fn.jobstart(cmd, {
 		on_exit = on_job_exit,
@@ -134,5 +137,16 @@ vim.api.nvim_set_keymap("n", "<C-x>", "", {
 		vim.ui.input({ prompt = "Command: ", completion = "file", }, function(command)
 			if command then shell_exec({command}) end
 		end)
+	end,
+})
+
+vim.api.nvim_create_augroup("Quickfix", {clear = true})
+vim.api.nvim_create_autocmd("FileType", {
+	group = "Quickfix",
+	pattern = "qf",
+	callback = function()
+		vim.api.nvim_buf_set_keymap(0, "n", "<C-c>", "", {
+			callback = shell_terminate,
+		})
 	end,
 })
