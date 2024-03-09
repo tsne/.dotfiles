@@ -2,6 +2,7 @@ local job = {
 	id = -1,
 	last_line = "",
 	started = nil,
+	autoscroll = true,
 }
 
 local function on_job_output(id, data, event)
@@ -19,7 +20,7 @@ local function on_job_output(id, data, event)
 	end
 
 	vim.fn.setqflist({}, "a", { lines = lines })
-	vim.cmd("cbottom")
+	if job.autoscroll then vim.cmd("cbottom") end
 end
 
 local function on_job_exit(id, code, event)
@@ -49,7 +50,7 @@ local function on_job_exit(id, code, event)
 		{text = " "},
 		{text = last_line},
 	}, "a")
-	vim.cmd("cbottom")
+	if job.autoscroll then vim.cmd("cbottom") end
 
 	job.id = -1
 	job.last_line = ""
@@ -62,11 +63,12 @@ local function shell_terminate()
 	end
 end
 
-local function shell_exec(command, opts)
+local function shell_exec(command, autoscroll)
 	shell_terminate()
 
 	local cmd = table.concat(command, " ")
 	job.last_line = ""
+	job.autoscroll = autoscroll
 	job.id = vim.fn.jobstart(cmd, {
 		on_exit = on_job_exit,
 		on_stdout = on_job_output,
@@ -86,15 +88,15 @@ end
 
 
 local function grep(p)
-	shell_exec({vim.api.nvim_get_option_value("grepprg", {}), p.args})
+	shell_exec({vim.api.nvim_get_option_value("grepprg", {}), p.args}, false)
 end
 
 local function make(p)
-	shell_exec({vim.api.nvim_get_option_value("makeprg", {}), p.args})
+	shell_exec({vim.api.nvim_get_option_value("makeprg", {}), p.args}, true)
 end
 
 local function exec(p)
-	shell_exec({p.args})
+	shell_exec({p.args}, true)
 end
 
 
@@ -129,13 +131,13 @@ vim.api.nvim_create_user_command("Day", function() vim.opt.background = "light" 
 vim.api.nvim_create_user_command("Night", function() vim.opt.background = "dark" end, {})
 vim.api.nvim_create_user_command("Grep", grep, { nargs = "+", complete = "file" })
 vim.api.nvim_create_user_command("Make", make, { nargs = "*" })
-vim.api.nvim_create_user_command("Exec", exec, { nargs = "+" })
+vim.api.nvim_create_user_command("Term", exec, { nargs = "+" })
 
 vim.api.nvim_set_keymap("n", "<C-x>", "", {
 	noremap = true,
 	callback = function()
 		vim.ui.input({ prompt = "Command: ", completion = "file", }, function(command)
-			if command then shell_exec({command}) end
+			if command then shell_exec({command}, true) end
 		end)
 	end,
 })
