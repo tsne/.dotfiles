@@ -5,4 +5,10 @@ require("oil").setup({
 	view_options = {
 		show_hidden = true,
 	},
+	use_default_keymaps = false,
+	keymaps = {
+		["-"] = "actions.parent",
+		["<CR>"] = "actions.select",
+		["<C-c>"] = "actions.close",
+	},
 })
