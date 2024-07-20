@@ -259,4 +259,3 @@ hi("DiagnosticUnderlineError",   { sp = clr.text_error_emph, undercurl = true })
 hi("DiagnosticUnderlineWarn",    { sp = clr.text_warn_emph, undercurl = true })
 hi("DiagnosticUnderlineInfo",    { sp = clr.text_info_emph, undercurl = true })
 hi("DiagnosticUnderlineHint",    { link = "DiagnosticUnderlineInfo" })
-

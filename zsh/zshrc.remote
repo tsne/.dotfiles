@@ -1,0 +1,47 @@
+export LC_ALL=en_US.UTF-8
+
+export CLICOLOR=1
+export LSCOLORS=dxgxxxxxbxxxxxbxbxdxdx
+export LS_COLORS=di=33:ln=36:so=0:pi=0:ex=31:bd=0:cd=0:su=31:sg=31:tw=33:ow=33
+export LESSHISTFILE=-
+
+alias ls='ls -1F'
+alias la='ls -a'
+alias ll='ls -l'
+
+PROMPT='%B%F{white}%K{red}%35<..<%~%k%f %#%b '
+setopt NO_CORRECT
+
+# history
+HISTSIZE=5000
+HISTFILE=$HOME/.cache/zsh/history
+SAVEHIST=$HISTSIZE
+setopt HIST_IGNORE_DUPS
+setopt HIST_REDUCE_BLANKS
+setopt HIST_IGNORE_SPACE
+setopt SHARE_HISTORY
+
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey '\e[A' history-beginning-search-backward-end
+bindkey '\e[B' history-beginning-search-forward-end
+
+# completion
+autoload -U compinit
+compinit
+
+setopt NO_BEEP
+setopt NO_AUTO_MENU
+setopt NO_AUTO_REMOVE_SLASH
+setopt RM_STAR_SILENT
+
+zstyle ':completion:*' use-compctl false
+zstyle ':completion:*' cache-path ~/.cache/zsh/completion
+zstyle ':completion::complete:*' use-cache on
+zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
+zstyle ':completion:*' special-dirs true
+zstyle ':completion:*' verbose false
+
+# vim
+alias vi='vim'

@@ -12,7 +12,7 @@ function install_brew() {
 
 function install_zsh() {
 	rm -f $HOME/.zshrc
-	ln -s $dotfiles/zsh/zshrc $HOME/.zshrc
+	ln -s $dotfiles/zsh/zshrc.local $HOME/.zshrc
 	mkdir -p $HOME/.cache/zsh
 	source $HOME/.zshrc
 }
@@ -53,25 +53,7 @@ function install_go() {
 }
 
 function install_zig() {
-	zigdir=$HOME/dev/.zig
-
-	mkdir -p $zigdir/src
-	brew install cmake llvm zstd
-
-	git clone https://github.com/ziglang/zig.git $zigdir/src/zig
-	git clone https://github.com/zigtools/zls $zigdir/src/zls
-
-	cd $zigdir/src/zig
-		mkdir build
-		cmake -S. -Bbuild -DZIG_STATIC_LLVM=ON -DCMAKE_PREFIX_PATH="$(brew --prefix llvm);$(brew --prefix zstd)"
-		make -Cbuild install
-	cd -
-	cp -r $zigdir/src/zig/build/stage3/* $zigdir/
-
-	cd $zigdir/src/zls
-		zig build -Doptimize=ReleaseSafe
-	cd -
-	cp $zigdir/src/zls/zig-out/bin/zls $zigdir/bin/
+	brew install zig zls
 }
 
 

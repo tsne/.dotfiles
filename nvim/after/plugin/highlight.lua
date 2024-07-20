@@ -8,6 +8,7 @@ relink("@constant.builtin", "Keyword")
 relink("@function.builtin", "Keyword")
 relink("@type.qualifier", "Keyword")
 relink("@attribute", "Keyword")
+relink("@module", "Type")
 
 -- cmp
 relink("CmpItemAbbrMatch", "PmenuHighlight")

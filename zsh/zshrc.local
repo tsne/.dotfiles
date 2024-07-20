@@ -2,10 +2,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 
 export LC_ALL=en_US.UTF-8
 export GOPATH=$HOME/dev/.go
-export ZIGPATH=$HOME/dev/.zig
-export GOGITHUBPATH=$GOPATH/src/github.com
 export GOPRIVATE=github.com/egocentric-systems/*
-export PATH=$PATH:`go env GOROOT`/bin:$GOPATH/bin:~/dev/.tools/google-cloud-sdk/bin:$ZIGPATH/bin
+export PATH=$PATH:`go env GOROOT`/bin:$GOPATH/bin:~/dev/.tools/google-cloud-sdk/bin
 
 export CLICOLOR=1
 export LSCOLORS=dxgxxxxxbxxxxxbxbxdxdx
@@ -16,7 +14,7 @@ alias ls='ls -1F'
 alias la='ls -a'
 alias ll='ls -l'
 
-PROMPT='%B%F{white}%K{green}%35<..<%~%k%f %#%b '
+PROMPT='%B%F{white}%K{024}%35<..<%~%k%f %#%b '
 setopt NO_CORRECT
 
 # history
