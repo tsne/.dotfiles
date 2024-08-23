@@ -67,6 +67,8 @@ export USE_GKE_GCLOUD_AUTH_PLUGIN=True
 alias k='kubectl'
 kx() { if [ -n "$1" ]; then kubectl config use-context $1; else kubectl config current-context; fi; }
 
+# zig
+alias z='zig'
 
 
 # CTRL-R - Paste the selected command from history into the command line
