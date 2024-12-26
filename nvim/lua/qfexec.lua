@@ -1,5 +1,6 @@
 local job = {
 	id = -1,
+	cmd = "",
 	last_line = "",
 	started = nil,
 	autoscroll = true,
@@ -19,8 +20,9 @@ local function on_job_output(id, data, event)
 		job.last_line = data[#data]
 	end
 
+	local need_scroll = job.autoscroll and vim.fn.line(".") == vim.fn.line("$")
 	vim.fn.setqflist({}, "a", { lines = lines })
-	if job.autoscroll then vim.cmd("cbottom") end
+	if need_scroll then vim.cmd("cbottom") end
 end
 
 local function on_job_exit(id, code, event)
@@ -46,60 +48,43 @@ local function on_job_exit(id, code, event)
 		end
 	end
 
-	vim.fn.setqflist({
-		{text = " "},
-		{text = last_line},
-	}, "a")
-	if job.autoscroll then vim.cmd("cbottom") end
+	local need_scroll = job.autoscroll and vim.fn.line(".") == vim.fn.line("$")
+	vim.fn.setqflist({}, "a", { title = job.cmd .. "  (done)", lines = {" ", last_line} })
+	if need_scroll then vim.cmd("cbottom") end
 
 	job.id = -1
 	job.last_line = ""
 	job.started = nil
 end
 
-local function shell_terminate()
+local function terminate()
 	if job.id > 0 then
 		vim.fn.jobstop(job.id)
 	end
 end
 
-local function shell_exec(command, autoscroll)
-	shell_terminate()
+function exec(command, autoscroll)
+	terminate()
 
-	local cmd = table.concat(command, " ")
+	job.cmd = table.concat(command, " ")
 	job.last_line = ""
 	job.autoscroll = autoscroll
-	job.id = vim.fn.jobstart(cmd, {
+	job.id = vim.fn.jobstart(job.cmd, {
 		on_exit = on_job_exit,
 		on_stdout = on_job_output,
 		on_stderr = on_job_output,
 	})
 
 	if job.id < 0 then
-		error("'" .. cmd .. "' is not executable")
+		error("'" .. job.cmd .. "' is not executable")
 	elseif job.id == 0 then
 		error("invalid arguments to start command")
 	else
 		job.started = vim.fn.reltime()
-		vim.fn.setqflist({}, "r", { title = cmd, lines = {} })
+		vim.fn.setqflist({}, "r", { title = job.cmd .. "  (running)", lines = {} })
 		vim.cmd("copen")
 	end
 end
-
-
-local function grep(p)
-	shell_exec({vim.api.nvim_get_option_value("grepprg", {}), p.args}, false)
-end
-
-local function make(p)
-	shell_exec({vim.api.nvim_get_option_value("makeprg", {}), p.args}, true)
-end
-
-local function exec(p)
-	shell_exec({p.args}, true)
-end
-
-
 
 function _G.qftf(info)
 	local items = vim.fn.getqflist({ id = info.id, items = 1}).items
@@ -125,30 +110,16 @@ function _G.qftf(info)
 	return lines
 end
 
-vim.opt.qftf = "{info -> v:lua._G.qftf(info)}"
-
-vim.api.nvim_create_user_command("Day", function() vim.opt.background = "light" end, {})
-vim.api.nvim_create_user_command("Night", function() vim.opt.background = "dark" end, {})
-vim.api.nvim_create_user_command("Grep", grep, { nargs = "+", complete = "file" })
-vim.api.nvim_create_user_command("Make", make, { nargs = "*" })
-vim.api.nvim_create_user_command("Term", exec, { nargs = "+" })
-
-vim.api.nvim_set_keymap("n", "<C-x>", "", {
-	noremap = true,
-	callback = function()
-		vim.ui.input({ prompt = "Command: ", completion = "file", }, function(command)
-			if command then shell_exec({command}, true) end
-		end)
-	end,
-})
-
 vim.api.nvim_create_augroup("Quickfix", {clear = true})
 vim.api.nvim_create_autocmd("FileType", {
 	group = "Quickfix",
 	pattern = "qf",
 	callback = function()
 		vim.api.nvim_buf_set_keymap(0, "n", "<C-c>", "", {
-			callback = shell_terminate,
+			callback = terminate,
 		})
 	end,
 })
+vim.opt.qftf = "{info -> v:lua._G.qftf(info)}"
+
+return exec

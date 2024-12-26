@@ -44,7 +44,7 @@ require("lspconfig").gopls.setup(lsconf({
 }))
 require("lspconfig").zls.setup(lsconf())
 require("lspconfig").svelte.setup(lsconf())
-require("lspconfig").tsserver.setup(lsconf())
+require("lspconfig").ts_ls.setup(lsconf())
 
 
 -- nvim-cmp config
