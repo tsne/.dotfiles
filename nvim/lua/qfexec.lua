@@ -86,30 +86,6 @@ function exec(command, autoscroll)
 	end
 end
 
-function _G.qftf(info)
-	local items = vim.fn.getqflist({ id = info.id, items = 1}).items
-	local lines = {}
-	for i = info.start_idx, info.end_idx do
-		local item = items[i]
-		local filename = ""
-		if item.bufnr > 0 then 
-			filename = vim.fn.bufname(item.bufnr)
-		elseif item.filename then
-			filename = item.filename
-		end
-
-		local location = {}
-		if filename ~= "" then
-			table.insert(location, filename)
-			table.insert(location, item.lnum and item.lnum or "")
-			table.insert(location, item.col and item.col or "")
-			table.insert(location, " ")
-		end
-		table.insert(lines, table.concat(location, ":") .. item.text)
-	end
-	return lines
-end
-
 vim.api.nvim_create_augroup("Quickfix", {clear = true})
 vim.api.nvim_create_autocmd("FileType", {
 	group = "Quickfix",
@@ -120,6 +96,5 @@ vim.api.nvim_create_autocmd("FileType", {
 		})
 	end,
 })
-vim.opt.qftf = "{info -> v:lua._G.qftf(info)}"
 
 return exec

@@ -1,15 +1,11 @@
 export LC_ALL=en_US.UTF-8
 
 export CLICOLOR=1
-export LSCOLORS=dxgxxxxxbxxxxxbxbxdxdx
-export LS_COLORS=di=33:ln=36:so=0:pi=0:ex=31:bd=0:cd=0:su=31:sg=31:tw=33:ow=33
+export LSCOLORS=AxexxxxxdxxxxxdxdxAxAx
+export LS_COLORS=di=1:ln=34:so=0:pi=0:ex=33:bd=0:cd=0:su=31:sg=33:tw=1:ow=1
 export LESSHISTFILE=-
 
-alias ls='ls -1F'
-alias la='ls -a'
-alias ll='ls -l'
-
-PROMPT='%B%F{white}%K{red}%35<..<%~%k%f %#%b '
+PROMPT='%F{231}%K{124}[%n@%m] %35<..<%~ %k%f %# '
 setopt NO_CORRECT
 
 # history
@@ -43,5 +39,11 @@ zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}
 zstyle ':completion:*' special-dirs true
 zstyle ':completion:*' verbose false
 
-# vim
+# git
+__git_files() { _wanted files expl 'local files' _files }
+
+# aliases
+alias ls='ls -1F'
+alias la='ls -al'
+alias ll='ls -l'
 alias vi='vim'

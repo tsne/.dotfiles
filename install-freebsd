@@ -1,35 +1,20 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
 
 dotfiles=$HOME/.dotfiles
 
 
-function install_brew() {
-	/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	eval "$(/opt/homebrew/bin/brew shellenv)"
-	brew analytics off
-}
-
 function install_zsh() {
 	rm -f $HOME/.zshrc
-	ln -s $dotfiles/zsh/zshrc.local $HOME/.zshrc
+	ln -s $dotfiles/zsh/zshrc.remote $HOME/.zshrc
 	mkdir -p $HOME/.cache/zsh
 	source $HOME/.zshrc
-}
-
-function install_tmux() {
-	brew install tmux fzf fd
-	rm -f $HOME/.tmux.conf
-	ln -s $dotfiles/tmux/tmux.conf $HOME/.tmux.conf
-	sudo mkdir -p /usr/local/bin
-	sudo ln -s $dotfiles/tmux/tmux-cd /usr/local/bin/tmux-cd
-	sudo ln -s $dotfiles/tmux/tmux-goto /usr/local/bin/tmux-goto
 }
 
 function install_git() {
 	email="$(grep -oE '[^[:space:]]+$' ~/.ssh/id_ed25519.pub)"
 
-	brew install git
+	pkg install git
 	rm -f $HOME/.gitconfig
 	ln -s $dotfiles/git/gitconfig $HOME/.gitconfig
 	echo "$email $(cat ~/.ssh/id_ed25519.pub)" > $dotfiles/git/allowed_signers
@@ -42,6 +27,8 @@ function install_nvim() {
 	brew install neovim
 	rm -rf $HOME/.config/nvim
 	ln -s $dotfiles/nvim $HOME/.config/nvim
+	rm -rf $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim
+	git clone --depth 1 https://github.com/wbthomason/packer.nvim $HOME/.local/share/nvim/site/pack/packer/start/packer.nvim
 }
 
 function install_go() {
